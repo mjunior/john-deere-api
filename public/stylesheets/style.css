@@ -24,6 +24,10 @@ a {
     color:#aaa;
 }
 
+.message-receive{
+	text-align: right;
+}
+
 
 .page header{
 	background-color: #fff;
@@ -48,7 +52,7 @@ a {
 .page header h2{
 	font-weight: 700;
 	text-transform: uppercase;
-	font-size: 20px;
+	font-size: 15px;
 	color: #666;
 	text-align: center;
 	transition: all 0.5s;
@@ -132,7 +136,7 @@ a {
 	color: #333;
 }
 #chat .message{
-	margin-bottom: 15px;
+	margin-bottom: 28px;
 }
 #chat .message .box{
 	-webkit-box-shadow: -1px 0px 5px 0px rgba(219,219,219,1);

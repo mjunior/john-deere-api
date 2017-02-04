@@ -42,15 +42,31 @@ rp(options).then(function (repos) {
         };
 
         for(i in repos.channels){
-          repos.channels[i].img = repos.channels[i].name.split('-')[1]+".png"; 
-        }
 
+          repos.channels[i].img = repos.channels[i].name.split('-')[1]+".png"; 
+
+          if(repos.channels[i].name.split('-')[0] == 'c' || repos.channels[i].name.split('-')[0] == 'C'){
+            var originalName = repos.channels[i].name;
+            repos.channels[i].name = "Colheitadeira "+originalName.split('-')[1];
+            repos.channels[i].description = "Converse com sua colheitadeira "+originalName.split('-')[1];
+          }
+
+          if(repos.channels[i].name.split('-')[0] == 'con'){
+              var originalName = repos.channels[i].name;
+              repos.channels[i].name = "Concessionária "+originalName.split('-')[1];
+              repos.channels[i].description = "Fale direto com sua concessionária. ";
+            }
+
+           if(repos.channels[i].name.split('-')[0] == 'U'){
+              var originalName = repos.channels[i].name;
+              repos.channels[i].name = originalName.split('-')[1].replace('.'," ");
+              repos.channels[i].description = "Fale com o profissional "+originalName.split('-')[1];
+            }
+        }
 
         console.log(repos);
         rp(userInfoJson).then(function(us){
             usGlobal = us;
-
-
             res.render('index', { chats: repos, title:"JDConnect" });
         })
     })
@@ -94,10 +110,21 @@ router.get('/chat/:id', function(req, res, next) {
             chatHistory.messages[i].eu = false;
 
           chatHistory.messages[i].img = info.channel.name.split('-')[1]+".png";
+
           chatHistory.messages[i].date = dateFormat(chatHistory.messages[i].ts, "dd/mm/yyyy, h:MM:ss");
         }
         console.log(chatHistory.messages);
-        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages.reverse() , title: info.channel.name, imagem: info.channel.name });
+
+        var titleName = ""
+        if(info.channel.name.split('-')[0] == 'c' || info.channel.name.split('-')[0] == 'C'){
+          titleName = "Colheitadeira "+info.channel.name.split('-')[1];
+        }else{
+          if(info.channel.name.split('-')[0] == 'con'){
+            titleName = "Concessionaria "+info.channel.name.split('-')[1];
+          }
+        }
+
+        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages.reverse() , title: titleName, imagem: info.channel.name });
       
       }).catch(function (err) {
         // API call failed...
@@ -133,18 +160,19 @@ router.get('/chatMessages/:id', function(req, res, next) {
     }).then(function(info){
 
       rp(optionsHistory).then(function (chatHistory) {
-        console.log(chatHistory.messages[0].u._id);
+  
 
         for(i in chatHistory.messages){
 
-            console.log(chatHistory.messages[i].u._id +"=="+ usGlobal._id)
-
+          
           if(chatHistory.messages[i].u._id == usGlobal._id)
             chatHistory.messages[i].eu = true;
           else
             chatHistory.messages[i].eu = false;
+
+          chatHistory.messages[i].img = info.channel.name.split('-')[1]+".png";
+          chatHistory.messages[i].date = dateFormat(chatHistory.messages[i].ts, "dd/mm/yyyy, h:MM:ss");
         }
-        console.log(chatHistory.messages);
         res.send({ history : chatHistory.messages.reverse(), });
         res.status(200).end();
       
@@ -249,7 +277,9 @@ function botResponde(msgInput,roomId){
         }, function (errorObject) {
           console.log("The read failed: " + errorObject.code);
         });
-    }if(msgInput.toLowerCase() == 'como voce esta?'){
+    }
+
+    if(msgInput.toLowerCase() == 'como voce esta?'){
         //status/T660/saude
         url = "status/T660/saude"
                 // As an admin, the app has access to read and write all data, regardless of Security Rules
@@ -273,6 +303,70 @@ function botResponde(msgInput,roomId){
           console.log("The read failed: " + errorObject.code);
         });
     }
+
+
+      if(msgInput.toLowerCase() == 'solucao 10203'){
+          //status/T660/saude
+          url = "dtac/10203/"
+                  // As an admin, the app has access to read and write all data, regardless of Security Rules
+          var ref = db.ref(url);
+          // Attach an asynchronous callback to read the data at our posts reference
+          ref.on("value", function(snapshot) {
+            console.log(snapshot.val());
+            
+            botFala = "A causa é: "+snapshot.val().causa;
+
+            options.body.text = botFala;
+            rp(options)
+              .then(function (parsedBody) {
+                console.log(parsedBody);
+              })
+              .catch(function (err) {
+                console.log(err);
+              });
+
+
+          }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+          });
+      }
+
+
+       if(msgInput.toLowerCase() == 'manutencoes'){
+          //status/T660/saude
+          url = "status/T660/manutencao"
+                  // As an admin, the app has access to read and write all data, regardless of Security Rules
+          var ref = db.ref(url);
+          // Attach an asynchronous callback to read the data at our posts reference
+          ref.on("value", function(snapshot) {
+            console.log(snapshot.val());
+            manutencoes = snapshot.val();
+
+
+
+
+          for(var i in manutencoes){
+            console.log(manutencoes[i]);
+              botFala = "Manutenção realizada em : "+manutencoes[i].dia+" enviado por:  "+manutencoes[i].origem;
+              options.body.text = botFala;
+              rp(options)
+                .then(function (parsedBody) {
+                  console.log(parsedBody);
+                })
+                .catch(function (err) {
+                  console.log(err);
+                });
+            
+          }
+
+
+
+
+          }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+          });
+      }
+
     else{
       return
     }

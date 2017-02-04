@@ -9,11 +9,14 @@
     {{#if this.eu}}
         <div class="row message">
           
-          <div class="col-xs-offset-2 col-md-offset-2 col-md-10 col-xs-10">
-          <p class="message-receive">
+          <div class="col-xs-offset-3 col-md-offset-3 col-md-9 col-xs-9">
+          <div class="message-receive">
            {{this.msg}}
-          </p>
-          
+          <div class="time">
+              <small>{{this.date}}</small>
+            </div>
+          </div>
+
           </div>
         </div>  
     {{else}}
@@ -24,7 +27,7 @@
         <div class="col-md-10 col-xs-10">
           <div class="message-send">
            {{this.msg}}
-                       <div class="time">
+             <div class="time">
               <small>{{this.date}}</small>
             </div>
           </div>
@@ -77,23 +80,28 @@
                 for(var i in e.responseJSON.history){
                   if(e.responseJSON.history[i].eu){
                     $('.chatbox').html($('.chatbox').html() + "<div class=\"row message\">\
-                      <div class=\"col-xs-offset-2 col-md-offset-2 col-md-10 col-xs-10\">\
-                        <p class=\"message-receive\">"+e.responseJSON.history[i].msg+"</p>\
+                      <div class=\"col-xs-offset-3 col-md-offset-3 col-md-9 col-xs-9\">\
+                        <div class=\"message-receive\">"+e.responseJSON.history[i].msg+"</div>\
+                        <div class=\"time\">\
+                          <small>"+e.responseJSON.history[i].date+"</small>\
+                        </div>\
                       </div>\
                     </div>");
                   }
                   else{
                     $('.chatbox').html($('.chatbox').html() + "<div class=\"row message\">\
                     <div class=\"col-md-2 col-xs-2\">\
-                          <img class=\"img-responsive\" src=\"/img/avatar.png\">\
+                          <img class=\"img-responsive\" src=\"/img/"+e.responseJSON.history[i].img+"\">\
                         </div>\
                       <div class=\"col-md-10 col-xs-10\">\
-                        <p class=\"message-send\">"+e.responseJSON.history[i].msg+"</p>\
+                        <div class=\"message-send\">"+e.responseJSON.history[i].msg+"</div>\
+                        <div class=\"time\">\
+                          <small>"+e.responseJSON.history[i].date+"</small>\
+                        </div>\
                       </div>\
                     </div>");    
                   }
                 }
-                $('body').scrollTop($('.chatbox')[0].scrollHeight);
               }
             }
             //filtro para tratar mensagem
@@ -121,7 +129,10 @@
                if(e.status === 200){
                    $('.chatbox').html($('.chatbox').html() + "<div class=\"row message\">\
                   <div class=\"col-xs-offset-2 col-md-offset-2 col-md-10 col-xs-10\">\
-                  <p class=\"message-receive\">"+msg+"</p>\
+                  <div class=\"message-receive\">"+msg+"</div>\
+                  <div class=\"time\">\
+                          <small>"+e.responseJSON.history[i].date+"</small>\
+                        </div>\
                   </div>\
                 </div>");
                    $('body').scrollTop($('.chatbox')[0].scrollHeight);
