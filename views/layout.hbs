@@ -2,9 +2,52 @@
 <html>
   <head>
     <title>{{title}}</title>
+    <link rel='stylesheet' href='/stylesheets/normalize.css' />
+    <link rel='stylesheet' href='/stylesheets/font-awesome.min.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
+
+
+    <script type="text/javascript" src="/javascripts/jquery.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/wow.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   </head>
   <body>
+      <div class="container-fluid">
+    <section class="page" id="chat">
+      <header>
+        <div class="col-md-2 col-xs-2">
+          <a href="index.html"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        </div>
+        <div class="col-md-8 col-xs-8">
+          <h2>{{title}}</h2>
+        </div>
+         <div class="col-md-2 col-xs-2">
+          <i class="fa fa-search" aria-hidden="true" id="pesquisar"></i>
+        </div>
+{{!--         <div class="col-md-2 col-xs-2 rightHeader">
+          <img class="img-responsive" src="static/img/avatar.png">
+        </div> --}}
+      </header>
+
+
     {{{body}}}
+      
+      </div>
+    </section>
+
   </body>
+
+
+  <script>
+    new WOW().init();
+    </script>
+  <script type="text/javascript">
+    $('#pesquisar').click(function(){
+        $('#form-search').removeClass('ocultar');
+    });
+  </script>
+
 </html>

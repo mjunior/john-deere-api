@@ -1,5 +1,33 @@
-<ul>
-  {{#each colheitadeiras}}
-  <li>{{this.nome}}</li>
-  {{/each}}
-</ul>
+
+  <div class="buscar ocultar wow slideInDown" id="form-search">
+    <form>
+      <input type="text" placeholder="Pesquisar..."/>
+    </form>
+  </div>
+
+      <div style="height:90px;"></div>
+
+      {{#each chats.channels}}
+        <a href="/chat/{{this._id}}">
+          <div class="row message">
+              <div class="col-md-2 col-xs-2">
+                <img class="img-responsive" src="/img/avatar.png">
+              </div>
+              <div class="col-md-8 col-xs-8">
+              <p class="name-person">
+                {{this.name}}
+              </p>
+              <p class="last-message">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+              </div>
+              <div class="col-md-2 col-xs-2">
+              <div class="not-read">
+                <p>09:41</p>
+                <i class="fa fa-circle" aria-hidden="true"><p></p></i>
+              </div>
+              </div>
+          </div>
+        </a>
+      {{/each}}
+    

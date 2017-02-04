@@ -1,8 +1,163 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+body{
+	font-family: 'Roboto', sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.conversa{
+	margin-top: 100px;
+}
+
+.ocultar{
+	display: none;
+}
+.page header{
+	background-color: #fff;
+	padding: 10px;
+	border-bottom:2px solid #efefef;
+	height: auto;
+	margin-bottom: 80px;
+	height: 80px;
+	position: fixed;
+	z-index: 8;
+	width: 100%;
+	top: 0px;
+	transition: all 0.5s;
+}
+
+.page header i{
+	color: #666;
+	font-size: 25px;
+	margin-top: 50%;
+}
+
+.page header h2{
+	font-weight: 700;
+	text-transform: uppercase;
+	font-size: 20px;
+	color: #666;
+	text-align: center;
+	transition: all 0.5s;
+}
+.buscar{
+	position: fixed;
+	height: 80px;
+	border-bottom: 2px solid #efefef;
+	z-index: 9999;
+	background-color:rgb(54,124,43); 
+	width: 100%;
+	padding: 10px;
+}
+
+.buscar form input{
+	width: 100%;
+	border: none;
+	height: 80px;
+	background: transparent;
+}
+
+.buscar form input::-moz-input-placeholder{
+	color: #fff;
+}
+#home .message{
+	margin-bottom: 15px;
+	border-bottom: 1px solid #efefef;
+	padding: 5px;
+}
+
+#home .message:active{
+	background-color: rgba(239,239,239,0.2);
+}
+#home .message p.name-person{
+	font-weight: 500;
+	color: #666;
+	font-size: 20px;
+}
+
+#home .message p.last-message{
+
+}
+
+#home .message .not-read i{
+	margin-top: 10px;
+	font-size: 40px;
+	color: rgb(54,124,43);
+}
+
+#chat .hora-conversa{
+	margin-top: 10px;
+	margin-bottom: 15px;
+	color: #888;
+	text-align: center;
+}
+#chat .message-receive,#chat .message-send{
+	background-color: #367c2b;
+  border-radius: 20px;
+  padding: 10px;
+  color: #fff;
+    min-width: 200px;
+}
+
+#chat .box i{
+	margin-top: 20px;
+	font-size: 50px;
+	color: #888;
+}
+#chat .message-send{
+	color: #333;
+}
+#chat .message{
+	margin-bottom: 15px;
+}
+#chat .message .box{
+	-webkit-box-shadow: -1px 0px 5px 0px rgba(219,219,219,1);
+-moz-box-shadow: -1px 0px 5px 0px rgba(219,219,219,1);
+box-shadow: -1px 0px 5px 0px rgba(219,219,219,1);
+width: 200px;
+margin-left: 8px;
+text-align: center;
+}
+
+#chat .message .document{
+	border: 1px solid #efefef;
+	-webkit-box-shadow: -1px 0px 5px 0px rgba(219,219,219,1);
+-moz-box-shadow: -1px 0px 5px 0px rgba(219,219,219,1);
+box-shadow: -1px 0px 5px 0px rgba(219,219,219,1);
+width: 200px;
+}
+
+#chat .message .box p{
+	padding: 5px;
+	font-weight: 500;
+	color: #81CFE0;
+}
+#chat .message-send{
+	background-color: #efefef;
+}
+
+.identificador{
+	margin-left: 20px;
+	font-size: 12px;
+	color: #bbb;
+
+}
+
+.inferior{
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	background-color:#fff;
+	padding: 10px;
+	border-top: 2px solid #efefef;
+}
+
+.inferior input{
+	background: transparent; 
+	border: none;
+	border-radius: 10px;
+	margin-top: 10px;
+
+}
+
+.inferior i{
+	font-size: 45px;
+	color: rgb(255,222,0);
 }
