@@ -65,6 +65,44 @@
       
       var roomId = window.location.pathname.split('/')[2];
 
+      setInterval(function(){ 
+
+        $.ajax({
+            method: "GET",
+            url: "/chatMessages/"+roomId,
+            context: document.body,
+            complete: function(e, history){
+              if(e.status === 200){
+                $('.chatbox').html("");
+                for(var i in e.responseJSON.history){
+                  if(e.responseJSON.history[i].eu){
+                    $('.chatbox').html($('.chatbox').html() + "<div class=\"row message\">\
+                      <div class=\"col-xs-offset-2 col-md-offset-2 col-md-10 col-xs-10\">\
+                        <p class=\"message-receive\">"+e.responseJSON.history[i].msg+"</p>\
+                      </div>\
+                    </div>");
+                  }
+                  else{
+                    $('.chatbox').html($('.chatbox').html() + "<div class=\"row message\">\
+                    <div class=\"col-md-2 col-xs-2\">\
+                          <img class=\"img-responsive\" src=\"/img/avatar.png\">\
+                        </div>\
+                      <div class=\"col-md-10 col-xs-10\">\
+                        <p class=\"message-send\">"+e.responseJSON.history[i].msg+"</p>\
+                      </div>\
+                    </div>");    
+                  }
+                }
+                $('body').scrollTop($('.chatbox')[0].scrollHeight);
+              }
+            }
+            //filtro para tratar mensagem
+            //filtrarMensagem(msg);
+            
+      });
+
+      }, 2000);
+
       $('#sendButton').click(function(){
           console.log('ok ok o ko k ok ');
           var msg = $('#msgInput').val();
@@ -87,10 +125,7 @@
                   </div>\
                 </div>");
                    $('body').scrollTop($('.chatbox')[0].scrollHeight);
-                  location.reload();
                }else if(e.status === 304){
-               }else{
-                   alert('voce está offline');
                }
             }
             //filtro para tratar mensagem

@@ -108,7 +108,53 @@ router.get('/chat/:id', function(req, res, next) {
 });
 
 
+router.get('/chatMessages/:id', function(req, res, next) {
+  var id = req.params.id;
+  var options = {
+    uri: 'https://jdconnect.rocket.chat/api/v1/channels.info?roomId='+id,
+    headers: {
+        "X-Auth-Token": "1ZxRzTd-t4i8hhOlpJAgNiS1_wEHAqB0Sqq15DslMVB",
+        "X-User-Id": "TWt2SqMWwa4uYjpZy"
+    },
+    json: true // Automatically parses the JSON string in the response
+  };
 
+  var optionsHistory = {
+    uri: 'https://jdconnect.rocket.chat/api/v1/channels.history?roomId='+id,
+    headers: {
+        "X-Auth-Token": "1ZxRzTd-t4i8hhOlpJAgNiS1_wEHAqB0Sqq15DslMVB",
+        "X-User-Id": "TWt2SqMWwa4uYjpZy"
+    },
+    json: true // Automatically parses the JSON string in the response
+  };
+
+  rp(options).then(function (chatInfo) {
+      return chatInfo
+    }).then(function(info){
+
+      rp(optionsHistory).then(function (chatHistory) {
+        console.log(chatHistory.messages[0].u._id);
+
+        for(i in chatHistory.messages){
+
+            console.log(chatHistory.messages[i].u._id +"=="+ usGlobal._id)
+
+          if(chatHistory.messages[i].u._id == usGlobal._id)
+            chatHistory.messages[i].eu = true;
+          else
+            chatHistory.messages[i].eu = false;
+        }
+        console.log(chatHistory.messages);
+        res.send({ history : chatHistory.messages.reverse(), });
+        res.status(200).end();
+      
+      }).catch(function (err) {
+        // API call failed...
+      })
+    }).catch(function (err) {
+        // API call failed...
+    })
+});
 
 ///api/v1/chat.postMessage
 
