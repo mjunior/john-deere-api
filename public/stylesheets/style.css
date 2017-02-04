@@ -82,6 +82,10 @@ body{
 	color: rgb(54,124,43);
 }
 
+.chatbox{
+	  position: relative;
+    bottom: 65px;
+}
 #chat .hora-conversa{
 	margin-top: 10px;
 	margin-bottom: 15px;

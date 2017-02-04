@@ -1,32 +1,36 @@
 {{!--       <div class="hora-conversa">
         Hoje - 09:41
       </div> --}}
-  
-{{#each history}}
+ 
+<div style="height:90px"></div>
 
-  {{#if this.eu}}
+<div class="chatbox">
+  {{#each history}}
+
+    {{#if this.eu}}
+        <div class="row message">
+          
+          <div class="col-xs-offset-2 col-md-offset-2 col-md-10 col-xs-10">
+          <p class="message-receive">
+           {{this.msg}}
+          </p>
+          
+          </div>
+        </div>  
+    {{else}}
       <div class="row message">
-        
-        <div class="col-xs-offset-2 col-md-offset-2 col-md-10 col-xs-10">
-        <p class="message-receive">
-         {{this.msg}}
-        </p>
-        
-        </div>
-      </div>  
-  {{else}}
-    <div class="row message">
-    <div class="col-md-2 col-xs-2">
-          <img class="img-responsive" src="/img/avatar.png">
-        </div>
-      <div class="col-md-10 col-xs-10">
-        <p class="message-send">
-         {{this.msg}}
-        </p>
-      </div> 
-    </div>
-  {{/if}}
-{{/each}}
+      <div class="col-md-2 col-xs-2">
+            <img class="img-responsive" src="/img/avatar.png">
+          </div>
+        <div class="col-md-10 col-xs-10">
+          <p class="message-send">
+           {{this.msg}}
+          </p>
+        </div> 
+      </div>
+    {{/if}}
+  {{/each}}
+</div>  
 
     <section class="inferior">
       <div class="col-md-9 col-xs-9">
@@ -42,6 +46,22 @@
 <script>
   
     $(document).ready(function(){
+
+      window.setInterval(function(){
+        $('.container').scrollTop(1000);
+      },500)
+
+
+      
+      $('#msgInput').focus();
+      
+      // $("body").on("keyUp","sendButton",function(event){
+      //   if(event.keyCode == 13){
+      //     event.preventDefault();
+      //     $('#sendButton').click();
+      //   }
+      // });
+      
       var roomId = window.location.pathname.split('/')[2];
 
       $('#sendButton').click(function(){
@@ -51,23 +71,32 @@
           //limpa tela
           $('#msgInput').val('');
 
+         
+           
           $.ajax({
             method: "POST",
             url: "/new/"+roomId,
             data: {text: msg},
-            context: document.body
-          }).done(function() {
-
+            context: document.body,
+            complete: function(e, xhr, settings){
+               if(e.status === 200){
+                   $('.chatbox').html($('.chatbox').html() + "<div class=\"row message\">\
+                  <div class=\"col-xs-offset-2 col-md-offset-2 col-md-10 col-xs-10\">\
+                  <p class=\"message-receive\">"+msg+"</p>\
+                  </div>\
+                </div>");
+                   $('.container').scrollTop(1000);
+                  location.reload();
+               }else if(e.status === 304){
+               }else{
+                   alert('voce está offline');
+               }
+            }
             //filtro para tratar mensagem
-         //   filtrarMensagem(msg);
+            //filtrarMensagem(msg);
             
-            $( this ).addClass( "done" );
           });
       })
-
-
-
-
 
     })
 

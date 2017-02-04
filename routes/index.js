@@ -91,7 +91,7 @@ router.get('/chat/:id', function(req, res, next) {
             chatHistory.messages[i].eu = false;
         }
         console.log(chatHistory.messages);
-        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages , title: "João" });
+        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages.reverse() , title: "João" });
       
       }).catch(function (err) {
         // API call failed...
@@ -135,6 +135,9 @@ router.post('/new/:id', function(req, res, next) {
     .then(function (parsedBody) {
        console.log(parsedBody);
        botResponde(inputText,id);
+      
+    }).then(function(){
+      res.status(200).end();
     })
     .catch(function (err) {
       // POST failed...
@@ -149,9 +152,7 @@ function botResponde(msgInput,roomId){
     console.log('Enviando mensagem');
     var botFala = "";
 
-    if(msgInput.toLowerCase() == 'eu quero colher soja'){
-
-        var options = {
+    var options = {
           uri: 'https://jdconnect.rocket.chat/api/v1/chat.postMessage',
           method: 'POST',
           headers: {
@@ -163,8 +164,9 @@ function botResponde(msgInput,roomId){
                 text: botFala,     
              },
           json: true // Automatically parses the JSON string in the response
-        };
+    };
 
+    if(msgInput.toLowerCase() == 'eu quero colher soja'){
 
         //harverst/S540/colher_soja
         url = "harverst/S540/colher_soja"
@@ -173,7 +175,33 @@ function botResponde(msgInput,roomId){
         // Attach an asynchronous callback to read the data at our posts reference
         ref.on("value", function(snapshot) {
           console.log(snapshot.val());
-          botFala = snapshot.val()[0].texto;
+          
+          for(var i in snapshot.val()){
+            botFala = snapshot.val()[i].texto;
+            options.body.text = botFala;
+            rp(options)
+              .then(function (parsedBody) {
+                console.log(parsedBody);
+              })
+              .catch(function (err) {
+                console.log(err);
+              });
+          }
+
+
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });
+    }if(msgInput.toLowerCase() == 'como voce esta?'){
+        //status/T660/saude
+        url = "status/T660/saude"
+                // As an admin, the app has access to read and write all data, regardless of Security Rules
+        var ref = db.ref(url);
+        // Attach an asynchronous callback to read the data at our posts reference
+        ref.on("value", function(snapshot) {
+          console.log(snapshot.val());
+          
+          botFala = snapshot.val()[0].text;
           options.body.text = botFala;
           rp(options)
             .then(function (parsedBody) {
@@ -187,9 +215,11 @@ function botResponde(msgInput,roomId){
         }, function (errorObject) {
           console.log("The read failed: " + errorObject.code);
         });
-    }else{
+    }
+    else{
       return
     }
+
 }
 
 module.exports = router;
