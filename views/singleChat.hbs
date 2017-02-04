@@ -46,13 +46,12 @@
 <script>
   
     $(document).ready(function(){
+      $('body').scrollTop($('.chatbox')[0].scrollHeight);
+      // setInterval(function(){
+      //     console.log('baixo');
+          
+      //  }, 300);
 
-      window.setInterval(function(){
-        $('.container').scrollTop(1000);
-      },500)
-
-
-      
       $('#msgInput').focus();
       
       // $("body").on("keyUp","sendButton",function(event){
@@ -85,7 +84,7 @@
                   <p class=\"message-receive\">"+msg+"</p>\
                   </div>\
                 </div>");
-                   $('.container').scrollTop(1000);
+                   $('body').scrollTop($('.chatbox')[0].scrollHeight);
                   location.reload();
                }else if(e.status === 304){
                }else{

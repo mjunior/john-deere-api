@@ -78,6 +78,7 @@ router.get('/chat/:id', function(req, res, next) {
   rp(options).then(function (chatInfo) {
       return chatInfo
     }).then(function(info){
+
       rp(optionsHistory).then(function (chatHistory) {
         console.log(chatHistory.messages[0].u._id);
 
@@ -91,7 +92,7 @@ router.get('/chat/:id', function(req, res, next) {
             chatHistory.messages[i].eu = false;
         }
         console.log(chatHistory.messages);
-        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages.reverse() , title: "João" });
+        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages.reverse() , title: info.channel.name });
       
       }).catch(function (err) {
         // API call failed...
@@ -149,6 +150,13 @@ router.post('/new/:id', function(req, res, next) {
 
 ///METODO de resposta do BOT
 function botResponde(msgInput,roomId){
+
+
+  msgInput = removerAcentos( msgInput.toLowerCase() );
+
+
+
+
     console.log('Enviando mensagem');
     var botFala = "";
 
@@ -223,3 +231,23 @@ function botResponde(msgInput,roomId){
 }
 
 module.exports = router;
+
+function removerAcentos( newStringComAcento ) {
+  var string = newStringComAcento;
+  var mapaAcentosHex  = {
+    a : /[\xE0-\xE6]/g,
+    e : /[\xE8-\xEB]/g,
+    i : /[\xEC-\xEF]/g,
+    o : /[\xF2-\xF6]/g,
+    u : /[\xF9-\xFC]/g,
+    c : /\xE7/g,
+    n : /\xF1/g
+  };
+
+  for ( var letra in mapaAcentosHex ) {
+    var expressaoRegular = mapaAcentosHex[letra];
+    string = string.replace( expressaoRegular, letra );
+  }
+
+  return string.toLowerCase();
+}

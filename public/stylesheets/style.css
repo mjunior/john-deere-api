@@ -9,13 +9,19 @@ body{
 .ocultar{
 	display: none;
 }
+
+a {
+    color: #5e5e5e;
+    text-decoration: none;
+}
+
 .page header{
 	background-color: #fff;
 	padding: 10px;
 	border-bottom:2px solid #efefef;
 	height: auto;
 	margin-bottom: 80px;
-	height: 80px;
+	height: 70px;
 	position: fixed;
 	z-index: 8;
 	width: 100%;
@@ -70,6 +76,13 @@ body{
 	font-weight: 500;
 	color: #666;
 	font-size: 20px;
+}
+
+.name-person{
+	font-size: 16px;
+    font-weight: bold;
+    text-transform: capitalize;
+    border-bottom: 1px solid #aaa;
 }
 
 #home .message p.last-message{
@@ -137,6 +150,14 @@ width: 200px;
 	background-color: #efefef;
 }
 
+
+#chat .message:hover{
+	background: #f6f6f6;
+	cursor:pointer;
+}
+
+
+
 .identificador{
 	margin-left: 20px;
 	font-size: 12px;
@@ -154,10 +175,14 @@ width: 200px;
 }
 
 .inferior input{
-	background: transparent; 
-	border: none;
-	border-radius: 10px;
-	margin-top: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+    font-size: 16px;
 
 }
 
