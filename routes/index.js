@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var admin = require("firebase-admin");
 var rp = require('request-promise');
-
+var dateFormat = require('dateformat');
 var serviceAccount = require("../JohnDeere-51668cf70974.json");
 
 var usGlobal = "";
@@ -12,6 +12,7 @@ admin.initializeApp({
 });
 
 var db = admin.database();
+
 // /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
@@ -20,10 +21,10 @@ var db = admin.database();
 router.get('/', function(req, res, next) {
 
 var options = {
-    uri: 'https://jdconnect.rocket.chat/api/v1/channels.list',
+    uri: 'https://jdconnect.rocket.chat/api/v1/channels.list.joined',
     headers: {
-        "X-Auth-Token": "1ZxRzTd-t4i8hhOlpJAgNiS1_wEHAqB0Sqq15DslMVB",
-        "X-User-Id": "TWt2SqMWwa4uYjpZy"
+        "X-Auth-Token": "u2seXVqRd9gS9Sp1m7TJQgcGiR-_cg4D8Fc3W2LUbQF",
+        "X-User-Id": "6ebL9HvyQGcbo434f"
     },
     json: true // Automatically parses the JSON string in the response
 };
@@ -31,20 +32,24 @@ var options = {
 rp(options).then(function (repos) {
       return repos
     }).then(function(repos){
-      var userInfoJson = {
+        var userInfoJson = {
           uri: 'https://jdconnect.rocket.chat/api/v1/me',
           headers: {
-              "X-Auth-Token": "1ZxRzTd-t4i8hhOlpJAgNiS1_wEHAqB0Sqq15DslMVB",
-              "X-User-Id": "TWt2SqMWwa4uYjpZy"
+               "X-Auth-Token": "u2seXVqRd9gS9Sp1m7TJQgcGiR-_cg4D8Fc3W2LUbQF",
+        "X-User-Id": "6ebL9HvyQGcbo434f"
           },
           json: true // Automatically parses the JSON string in the response
         };
-        
+
+        for(i in repos.channels){
+          repos.channels[i].img = repos.channels[i].name.split('-')[1]+".png"; 
+        }
+
+
+        console.log(repos);
         rp(userInfoJson).then(function(us){
-            console.log('------------------');
-            console.log(us);
-            
             usGlobal = us;
+
 
             res.render('index', { chats: repos, title:"JDConnect" });
         })
@@ -60,8 +65,8 @@ router.get('/chat/:id', function(req, res, next) {
   var options = {
     uri: 'https://jdconnect.rocket.chat/api/v1/channels.info?roomId='+id,
     headers: {
-        "X-Auth-Token": "1ZxRzTd-t4i8hhOlpJAgNiS1_wEHAqB0Sqq15DslMVB",
-        "X-User-Id": "TWt2SqMWwa4uYjpZy"
+        "X-Auth-Token": "u2seXVqRd9gS9Sp1m7TJQgcGiR-_cg4D8Fc3W2LUbQF",
+        "X-User-Id": "6ebL9HvyQGcbo434f"
     },
     json: true // Automatically parses the JSON string in the response
   };
@@ -69,8 +74,8 @@ router.get('/chat/:id', function(req, res, next) {
   var optionsHistory = {
     uri: 'https://jdconnect.rocket.chat/api/v1/channels.history?roomId='+id,
     headers: {
-        "X-Auth-Token": "1ZxRzTd-t4i8hhOlpJAgNiS1_wEHAqB0Sqq15DslMVB",
-        "X-User-Id": "TWt2SqMWwa4uYjpZy"
+         "X-Auth-Token": "u2seXVqRd9gS9Sp1m7TJQgcGiR-_cg4D8Fc3W2LUbQF",
+        "X-User-Id": "6ebL9HvyQGcbo434f"
     },
     json: true // Automatically parses the JSON string in the response
   };
@@ -83,16 +88,16 @@ router.get('/chat/:id', function(req, res, next) {
         console.log(chatHistory.messages[0].u._id);
 
         for(i in chatHistory.messages){
-
-            console.log(chatHistory.messages[i].u._id +"=="+ usGlobal._id)
-
           if(chatHistory.messages[i].u._id == usGlobal._id)
             chatHistory.messages[i].eu = true;
           else
             chatHistory.messages[i].eu = false;
+
+          chatHistory.messages[i].img = info.channel.name.split('-')[1]+".png";
+          chatHistory.messages[i].date = dateFormat(chatHistory.messages[i].ts, "dd/mm/yyyy, h:MM:ss");
         }
         console.log(chatHistory.messages);
-        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages.reverse() , title: info.channel.name });
+        res.render('singleChat', { chatInfo: info.channel, history:chatHistory.messages.reverse() , title: info.channel.name, imagem: info.channel.name });
       
       }).catch(function (err) {
         // API call failed...
@@ -120,8 +125,8 @@ router.post('/new/:id', function(req, res, next) {
       uri: 'https://jdconnect.rocket.chat/api/v1/chat.postMessage',
       method: 'POST',
       headers: {
-          "X-Auth-Token": "1ZxRzTd-t4i8hhOlpJAgNiS1_wEHAqB0Sqq15DslMVB",
-          "X-User-Id": "TWt2SqMWwa4uYjpZy"
+           "X-Auth-Token": "u2seXVqRd9gS9Sp1m7TJQgcGiR-_cg4D8Fc3W2LUbQF",
+           "X-User-Id": "6ebL9HvyQGcbo434f"
       },
        body: {
             roomId: id,
@@ -149,13 +154,11 @@ router.post('/new/:id', function(req, res, next) {
 
 
 ///METODO de resposta do BOT
+//////////////////////////////////
 function botResponde(msgInput,roomId){
 
 
   msgInput = removerAcentos( msgInput.toLowerCase() );
-
-
-
 
     console.log('Enviando mensagem');
     var botFala = "";
